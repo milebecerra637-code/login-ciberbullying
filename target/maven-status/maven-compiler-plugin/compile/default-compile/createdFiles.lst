@@ -1,9 +1,9 @@
 com\mycompany\login\servlets\HomeEstudianteServlet.class
-com\miempresa\servlets\ConsultarEstadoServletImpl.class
-com\mycompany\login\servlets\logoutServlet.class
 com\mycompany\login\servlets\ReporteJspRedirectServlet.class
 com\mycompany\login\servlets\ReportarServlet.class
-ConsultarEstadoServlet.class
+com\mycompany\login\servlets\ConsultarEstadoServlet.class
+com\mycompany\login\servlets\LogoutServlet.class
 com\mycompany\login\servlets\HomeAdminServlet.class
 com\mycompany\login\servlets\RegistroServlet.class
+com\mycompany\login\servlets\DatabaseConfig.class
 com\mycompany\login\servlets\LoginServlet.class

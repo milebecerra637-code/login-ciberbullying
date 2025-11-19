@@ -1,108 +1,211 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.ArrayList" %>
-<%
-  String usuario = (String) session.getAttribute("usuario");
-  if (usuario == null) {
-      response.sendRedirect(request.getContextPath() + "/login");
-      return;
-  }
-
-  List<?> noticias = (List<?>) request.getAttribute("noticias");
-  if (noticias == null) {
-      noticias = new ArrayList<>();
-  }
-%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Portal Estudiantil — Contra el Ciberbullying</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;800&display=swap" rel="stylesheet">
+  <meta charset="UTF-8"/>
+  <title>Portal Estudiante — Colegios Libres de Ciberbullying</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: "Baloo 2", sans-serif; margin: 0; background: linear-gradient(180deg, #e6fbff 0%, #eaf9ff 100%); color: #333; min-height: 100vh; }
-    .wrap { max-width: 1100px; margin: 24px auto; padding: 20px; }
-    .hero-banner { background: linear-gradient(135deg, #00a6c9, #06b6d4); color: white; text-align: center; padding: 34px 20px; border-radius: 18px; box-shadow: 0 8px 20px rgba(0,0,0,0.12); margin-bottom: 18px; }
-    .hero-banner h1 { margin: 0 0 6px 0; font-size: 30px; font-weight: 800; }
-    .hero-banner p { margin: 0; font-size: 16px; opacity: 0.95; }
-    .header { background: linear-gradient(135deg, #023047, #02475a); color: white; display: flex; justify-content: space-between; align-items: center; padding: 16px 22px; border-radius: 14px; box-shadow: 0 5px 12px rgba(0,0,0,0.08); margin-bottom: 22px; }
-    .header h2 { margin: 0; font-size: 20px; }
-    .logout-btn { background-color: rgba(255,255,255,0.12); color: white; border: 1px solid rgba(255,255,255,0.18); padding: 10px 16px; border-radius: 10px; cursor: pointer; font-weight: 700; }
-    .portal-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; margin-bottom: 22px; }
-    .action-card { background: white; border-radius: 14px; padding: 20px; text-align: center; box-shadow: 0 6px 18px rgba(0,0,0,0.06); transition: all 0.22s ease; border: 2px solid transparent; }
-    .action-card:hover { transform: translateY(-6px); box-shadow: 0 10px 28px rgba(0,0,0,0.12); border-color: #00a6c9; }
-    .action-card .icon { width: 64px; height: 64px; margin: 0 auto 12px; display: block; }
-    .action-card h3 { font-size: 18px; color: #023047; margin: 0 0 8px 0; font-weight: 800; }
-    .action-card p { color: #666; font-size: 14px; margin: 0 0 14px 0; line-height: 1.5; }
-    .action-card button { background: linear-gradient(135deg, #0077cc, #0099ff); color: white; border: none; padding: 10px 18px; border-radius: 10px; cursor: pointer; font-weight: 800; font-size: 14px; box-shadow: 0 6px 18px rgba(0,119,204,0.16); }
-    .action-card button.secondary { background: linear-gradient(135deg, #06b6d4, #0288a7); }
-    .noticias-section { background: white; border-radius: 14px; padding: 20px; margin-bottom: 18px; box-shadow: 0 5px 12px rgba(0,0,0,0.06); }
-    .noticias-section h2 { color: #023047; margin-top: 0; margin-bottom: 12px; font-size: 20px; }
-    .noticias-lista { max-height: 320px; overflow-y: auto; padding-right: 8px; }
-    .noticia-item { background: linear-gradient(135deg, #f8f9fa, #ffffff); border-left: 4px solid #00a6c9; padding: 12px; margin-bottom: 12px; border-radius: 10px; transition: all 0.2s; cursor: pointer; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.85) 0%, rgba(118, 75, 162, 0.85) 100%),
+                  url('<%= request.getContextPath() %>/images/OIP.webp');
+      background-size: auto, 200px 200px;
+      background-repeat: no-repeat, repeat;
+      min-height: 100vh;
+      padding: 40px;
+      position: relative;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(15px);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      animation: fadeIn 0.5s ease;
+      position: relative;
+      z-index: 1;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h1 {
+      color: #667eea;
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+
+    .welcome {
+      color: #718096;
+      font-size: 1.2em;
+      margin-bottom: 30px;
+    }
+
+    .info-card {
+      background: rgba(247, 250, 252, 0.9);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      border-left: 4px solid #667eea;
+    }
+
+    .info-card h3 {
+      color: #2d3748;
+      margin-bottom: 15px;
+      font-size: 1.3em;
+    }
+
+    .info-card p {
+      margin: 10px 0;
+      font-size: 1.1em;
+      color: #4a5568;
+    }
+
+    .info-card strong {
+      color: #667eea;
+      font-weight: 600;
+    }
+
+    .logout-btn {
+      background: linear-gradient(135deg, #fc5c7d, #6a82fb);
+      color: white;
+      padding: 15px 35px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1em;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 20px;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 30px rgba(252, 92, 125, 0.4);
+    }
+
+    .logout-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 40px rgba(252, 92, 125, 0.6);
+    }
+
+    .success-message {
+      background: linear-gradient(135deg, #11998e, #38ef7d);
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      font-size: 1.2em;
+      text-align: center;
+      font-weight: 600;
+      box-shadow: 0 10px 30px rgba(17, 153, 142, 0.3);
+    }
+
+    .menu-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 25px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      text-decoration: none;
+      display: block;
+    }
+
+    .menu-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+    }
+
+    .menu-card h3 {
+      margin-bottom: 10px;
+      font-size: 1.4em;
+    }
+
+    .menu-card p {
+      margin: 0;
+      opacity: 0.9;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+
     @media (max-width: 768px) {
-      .wrap { padding: 12px; }
-      .hero-banner h1 { font-size: 22px; }
-      .portal-actions { grid-template-columns: 1fr; }
+      body {
+        padding: 20px;
+        background-size: auto, 150px 150px;
+      }
+
+      .container {
+        padding: 25px;
+      }
+
+      h1 {
+        font-size: 2em;
+      }
+
+      .menu-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="hero-banner">
-      <h1>Unidos contra el Ciberbullying</h1>
-      <p>Este portal es tu espacio seguro para aprender, compartir y actuar</p>
+  <div class="container">
+    <div class="success-message">
+      ✅ ¡Has iniciado sesión correctamente!
     </div>
 
-    <div class="header">
-      <div>
-        <h2>Mi Portal Estudiantil</h2>
-        <p>Bienvenido, <strong><%= usuario %></strong></p>
-      </div>
-      <form action="<%= request.getContextPath() %>/logout" method="get" style="margin:0;">
-        <button type="submit" class="logout-btn">Cerrar sesión</button>
-      </form>
+    <h1> Portal del Estudiante</h1>
+    <p class="welcome">Bienvenido a tu panel de control</p>
+
+    <div class="info-card">
+      <p><strong>👤 Usuario:</strong> <%= session.getAttribute("usuario") %></p>
+      <p><strong>🎭 Rol:</strong> <%= session.getAttribute("rol") %></p>
+      <p><strong>📅 Sesión iniciada:</strong> <%= new java.util.Date() %></p>
     </div>
 
-    <div class="portal-actions">
-      <div class="action-card">
-        <img src="https://cdn-icons-png.flaticon.com/512/4149/4149670.png" alt="Reportar" class="icon">
-        <h3>Reportar Ciberbullying</h3>
-        <p>Envía una denuncia (puedes hacerlo anónimo). Cuanta más información proporciones, mejor podremos actuar.</p>
-        <button type="button" onclick="location.href='<%= request.getContextPath() %>/reportar'">Reportar ahora</button>
-      </div>
+    <div class="menu-grid">
+      <a href="<%= request.getContextPath() %>/reportar" class="menu-card">
+        <h3>📝 Crear Reporte</h3>
+        <p>Reporta un caso de ciberbullying</p>
+      </a>
 
-      <div class="action-card">
-        <img src="https://cdn-icons-png.flaticon.com/512/1250/1250615.png" alt="Consultar" class="icon">
-        <h3>Consultar estado de un caso</h3>
-        <p>Introduce el ID que te dimos al reportar para ver el estado actual del caso.</p>
-        <button type="button" class="secondary" 
-        onclick="location.href='<%= request.getContextPath() %>/consultarestado.jsp'">
-          Consultar estado
-        </button>
-      </div>
+      <a href="<%= request.getContextPath() %>/misReportes" class="menu-card">
+        <h3>📋 Mis Reportes</h3>
+        <p>Consulta tus reportes anteriores</p>
+      </a>
 
-      <div class="action-card">
-        <img src="https://cdn-icons-png.flaticon.com/512/2910/2910769.png" alt="Noticias" class="icon">
-        <h3>Ver noticias</h3>
-        <p>Mantente informado con las últimas publicaciones del portal y recursos disponibles.</p>
-        <button type="button" onclick="location.href='<%= request.getContextPath() %>/noticias'">Ver noticias</button>
-      </div>
+      <a href="<%= request.getContextPath() %>/consultarEstado" class="menu-card">
+        <h3> Estado de mis casos Reportados</h3>
+        <p>Consulta aqui tu caso</p>
+      </a>
     </div>
 
-    <div class="noticias-section">
-      <h2>Trabajamos para mantenerte informado!</h2>
-      <div class="noticias-lista">
-        <% if (noticias.isEmpty()) { %>
-          <div style="text-align:center;color:#888;padding:30px;">📢 No hay noticias publicadas en este momento. ¡Mantente atento!</div>
-        <% } else { %>
-          <% for (Object obj : noticias) { %>
-            <div class="noticia-item"><div class="noticia-contenido"><%= obj.toString() %></div></div>
-          <% } %>
-        <% } %>
-      </div>
-    </div>
+    <a href="<%= request.getContextPath() %>/logout" class="logout-btn">🚪 Cerrar sesión</a>
   </div>
 </body>
 </html>

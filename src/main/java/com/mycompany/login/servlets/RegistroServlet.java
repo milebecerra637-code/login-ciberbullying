@@ -2,24 +2,18 @@ package com.mycompany.login.servlets;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @WebServlet(name = "RegistroServlet", urlPatterns = {"/registro"})
 public class RegistroServlet extends HttpServlet {
-
-    private static final String URL = "jdbc:mysql://127.0.0.1:3307/login?useTimezone=true&serverTimezone=UTC&useSSL=false";
-    private static final String USER = "root";
-    private static final String PASSWORD = "";
-    private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -59,17 +53,9 @@ public class RegistroServlet extends HttpServlet {
             return;
         }
 
-        try {
-            Class.forName(DRIVER);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            request.setAttribute("error", "Error interno del servidor");
-            request.getRequestDispatcher("/WEB-INF/registro.jsp").forward(request, response);
-            return;
-        }
+        try (Connection con = DatabaseConfig.getConnection()) {
 
-        try (Connection con = DriverManager.getConnection(URL, USER, PASSWORD)) {
-
+            // Verificar si el usuario ya existe
             String checkUser = "SELECT COUNT(*) FROM usuarios WHERE nombre_usuario=?";
             try (PreparedStatement checkStmt = con.prepareStatement(checkUser)) {
                 checkStmt.setString(1, usuario);
@@ -81,23 +67,32 @@ public class RegistroServlet extends HttpServlet {
                 }
             }
 
+            // Insertar nuevo usuario
             String sql = "INSERT INTO usuarios (nombre, apellido, edad, curso, nombre_usuario, contrasena, rol) "
                        + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
             try (PreparedStatement ps = con.prepareStatement(sql)) {
                 ps.setString(1, nombre);
                 ps.setString(2, apellido);
-                if (edad > 0) ps.setInt(3, edad);
-                else ps.setNull(3, java.sql.Types.INTEGER);
+                
+                if (edad > 0) {
+                    ps.setInt(3, edad);
+                } else {
+                    ps.setNull(3, java.sql.Types.INTEGER);
+                }
+                
                 ps.setString(4, curso);
                 ps.setString(5, usuario);
-                ps.setString(6, contrasena); // En producción: hashear la contraseña
+                ps.setString(6, contrasena); // Contraseña en texto plano
                 ps.setString(7, "ESTUDIANTE");
 
                 int filas = ps.executeUpdate();
 
                 if (filas > 0) {
-                    // Redirigir al servlet de login y pasar parametro para mostrar mensaje
+                    System.out.println("Usuario registrado: " + usuario + 
+                                     " | BD: " + DatabaseConfig.getDatabaseType());
+                    
+                    // Redirigir al login con mensaje de éxito
                     response.sendRedirect(request.getContextPath() + "/login?registered=true");
                     return;
                 } else {
