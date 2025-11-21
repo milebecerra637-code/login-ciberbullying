@@ -1,8 +1,7 @@
 services:
   - type: web
     name: login-app
-    env: java
-    buildCommand: mvn clean package
-    startCommand: java -jar target/login-jar-with-dependencies.jar
+    env: docker
     plan: free
-
+    dockerfilePath: ./Dockerfile
+    autoDeploy: true
