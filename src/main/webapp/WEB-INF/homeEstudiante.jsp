@@ -185,7 +185,6 @@
     <div class="info-card">
       <p><strong>👤 Usuario:</strong> <%= session.getAttribute("usuario") %></p>
       <p><strong>🎭 Rol:</strong> <%= session.getAttribute("rol") %></p>
-      <p><strong>📅 Sesión iniciada:</strong> <%= new java.util.Date() %></p>
     </div>
 
     <div class="menu-grid">
@@ -195,8 +194,8 @@
       </a>
 
       <a href="<%= request.getContextPath() %>/misReportes" class="menu-card">
-        <h3>📋 Mis Reportes</h3>
-        <p>Consulta tus reportes anteriores</p>
+        <h3> Ultimas noticias!</h3>
+        <p>Mantente informado </p>
       </a>
 
       <a href="<%= request.getContextPath() %>/consultarEstado" class="menu-card">

@@ -37,18 +37,22 @@ public class LoginServlet extends HttpServlet {
             return;
         }
         
-        // Validar con la base de datos
-        String rol = validarUsuario(usuario, contrasena);
+        // Validar con la base de datos - Ahora retorna un array con [userId, rol]
+        String[] datosUsuario = validarUsuario(usuario, contrasena);
         
-        if (rol != null) {
+        if (datosUsuario != null) {
+            int userId = Integer.parseInt(datosUsuario[0]);
+            String rol = datosUsuario[1];
+            
             // Crear sesión y almacenar datos
             HttpSession session = request.getSession(true);
             session.setMaxInactiveInterval(3600); // 1 hora
+            session.setAttribute("userId", userId);        // ← NUEVO: Guardar ID
             session.setAttribute("usuario", usuario);
             session.setAttribute("rol", rol);
             
-            System.out.println("✅ Login exitoso - Usuario: " + usuario + " | Rol: " + rol);
-            System.out.println("🔐 ID Sesión: " + session.getId());
+            System.out.println(" Login exitoso - Usuario: " + usuario + " | Rol: " + rol + " | ID: " + userId);
+            System.out.println(" ID Sesión: " + session.getId());
             
             // USAR FORWARD DIRECTO en lugar de redirect
             if ("ADMIN".equalsIgnoreCase(rol)) {
@@ -61,14 +65,15 @@ public class LoginServlet extends HttpServlet {
             return;
         } else {
             // Usuario incorrecto
-            System.out.println("❌ Login fallido para usuario: " + usuario);
+            System.out.println(" Login fallido para usuario: " + usuario);
             request.setAttribute("error", "Usuario o contraseña incorrectos");
             request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
         }
     }
     
-    private String validarUsuario(String usuario, String contrasena) {
-        String rol = null;
+    // ACTUALIZADO: Ahora retorna [userId, rol]
+    private String[] validarUsuario(String usuario, String contrasena) {
+        String[] resultado = null;
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -80,29 +85,32 @@ public class LoginServlet extends HttpServlet {
             
             System.out.println("🔍 Buscando usuario: " + usuario);
             
-            // IMPORTANTE: Usar "nombre_usuario" que es el nombre de tu columna
-            String sql = "SELECT contrasena, rol FROM usuarios WHERE nombre_usuario = ?";
+            // ACTUALIZADO: Ahora también obtenemos el ID
+            String sql = "SELECT id, contrasena, rol FROM usuarios WHERE nombre_usuario = ?";
             ps = con.prepareStatement(sql);
             ps.setString(1, usuario);
             
             rs = ps.executeQuery();
             
             if (rs.next()) {
+                int userId = rs.getInt("id");
                 String contrasenaBD = rs.getString("contrasena");
                 String rolBD = rs.getString("rol");
                 
-                System.out.println("👤 Usuario encontrado en BD");
+                System.out.println(" Usuario encontrado en BD");
+                System.out.println("   ID: " + userId);
                 System.out.println("   Contraseña BD: [" + contrasenaBD + "]");
                 System.out.println("   Contraseña ingresada: [" + contrasena + "]");
                 System.out.println("   ¿Coinciden? " + contrasena.equals(contrasenaBD));
                 
                 // Validar contraseña
                 if (contrasena.equals(contrasenaBD)) {
-                    rol = rolBD;
                     // Si rol es null o vacío, asignar ESTUDIANTE por defecto
-                    if (rol == null || rol.trim().isEmpty()) {
-                        rol = "ESTUDIANTE";
+                    if (rolBD == null || rolBD.trim().isEmpty()) {
+                        rolBD = "ESTUDIANTE";
                     }
+                    // Retornar array con [userId, rol]
+                    resultado = new String[]{String.valueOf(userId), rolBD};
                 }
             } else {
                 System.out.println("❌ Usuario NO encontrado en BD");
@@ -125,6 +133,6 @@ public class LoginServlet extends HttpServlet {
             }
         }
         
-        return rol;
+        return resultado;
     }
 }

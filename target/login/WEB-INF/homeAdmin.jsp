@@ -141,18 +141,20 @@
     </div>
 
     <div class="grid">
+      <!-- USUARIOS - ACTUALIZADO -->
       <div class="card">
         <div class="card-icon">👥</div>
         <h3>Gestionar Usuarios</h3>
         <p>Administra estudiantes, profesores y moderadores del sistema.</p>
-        <a href="#" class="card-link">Ver usuarios →</a>
+        <a href="<%= request.getContextPath() %>/verUsuarios" class="card-link">Ver usuarios →</a>
       </div>
 
+      <!-- REPORTES - ACTUALIZADO -->
       <div class="card">
         <div class="card-icon">📊</div>
         <h3>Reportes</h3>
         <p>Revisa y gestiona los reportes de ciberbullying enviados por la comunidad.</p>
-        <a href="#" class="card-link">Ver reportes →</a>
+        <a href="<%= request.getContextPath() %>/verReportes" class="card-link">Ver reportes →</a>
       </div>
 
       <div class="card">
@@ -169,11 +171,12 @@
         <a href="#" class="card-link">Configurar →</a>
       </div>
 
+      <!-- NOTICIAS - YA ACTUALIZADO -->
       <div class="card">
-        <div class="card-icon">📝</div>
-        <h3>Contenido Educativo</h3>
-        <p>Gestiona recursos, artículos y material educativo sobre prevención.</p>
-        <a href="#" class="card-link">Gestionar contenido →</a>
+        <div class="card-icon">📰</div>
+        <h3>Gestionar Noticias</h3>
+        <p>Publica, edita y elimina noticias para la comunidad estudiantil.</p>
+        <a href="<%= request.getContextPath() %>/gestionarNoticias" class="card-link">Gestionar noticias →</a>
       </div>
 
       <div class="card">

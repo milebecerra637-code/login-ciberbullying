@@ -1,9 +1,14 @@
 com\mycompany\login\servlets\HomeEstudianteServlet.class
+com\mycompany\login\servlets\DatabaseConfig.class
+com\mycompany\login\servlets\EditarNoticiaServlet.class
+com\mycompany\login\servlets\LoginServlet.class
+com\mycompany\login\servlets\GestionarNoticiasServlet.class
+com\mycompany\login\servlets\PublicarNoticiaServlet.class
 com\mycompany\login\servlets\ReporteJspRedirectServlet.class
+com\mycompany\login\servlets\EliminarNoticiaServlet.class
 com\mycompany\login\servlets\ReportarServlet.class
 com\mycompany\login\servlets\ConsultarEstadoServlet.class
 com\mycompany\login\servlets\LogoutServlet.class
+com\mycompany\login\servlets\GestionarNoticiasServlet$Noticia.class
 com\mycompany\login\servlets\HomeAdminServlet.class
 com\mycompany\login\servlets\RegistroServlet.class
-com\mycompany\login\servlets\DatabaseConfig.class
-com\mycompany\login\servlets\LoginServlet.class
